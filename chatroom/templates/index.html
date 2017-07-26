@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #content {
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<span id="sid"></span> 房间号:<span id="room-num"></span>
+
+<input type="text" id="room">
+<button onclick="join()">加入</button>
+
+<div id="content">
+
+</div>
+
+<input type="text" id="message">
+<button onclick="newMsg()">发送</button>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
+
+<script>
+
+    function join() {
+        var room = $("#room").val();
+        $("#room-num").text(room);
+        socketio.emit('join', {"room": room})
+    }
+    function newMsg() {
+        var msg = $("#message").val();
+        socketio.emit('message', {"msg": msg})
+    }
+
+    var socketio = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
+    socketio.on('sid', function (data) {
+        $("#sid").text(data.message)
+    });
+
+    socketio.on('status', function (data) {
+        $("#content").append("<li>" + data.message + "</li>")
+    })
+
+</script>
+
+
+</body>
+</html>
