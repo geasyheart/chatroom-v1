@@ -1,6 +1,10 @@
 from flask_socketio import SocketIO
 
+from chatroom.utils.log import get_logger
+
 socketio = SocketIO(async_mode="eventlet", logger=True, engineio_logger=True)
+
+logger = get_logger()
 
 
 def configure(app):
@@ -12,12 +16,12 @@ def configure(app):
 
     @socketio.on_error()  # Handles the default namespace
     def error_handler(e):
-        print("\033[33;1m1-------:{}\033[0;0m".format(e))
+        logger.error(str(e))
 
     @socketio.on_error('/chat')  # handles the '/chat' namespace
     def error_handler_chat(e):
-        print("\033[34;1m2--------{}\033[0;0m".format(e))
+        logger.error(str(e))
 
     @socketio.on_error_default  # handles all namespaces without an explicit error handler
     def default_error_handler(e):
-        print("遇到错误:", e)
+        logger.error(str(e))

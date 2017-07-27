@@ -6,45 +6,83 @@
     <style>
         #content {
             overflow: auto;
+            width: 500px;
+            height: 500px;
+            float: left;
+        }
+
+        #user {
+            overflow: auto;
+            float: left;
+            height: 500px;
         }
     </style>
 </head>
 <body>
-<span id="sid"></span> 房间号:<span id="room-num"></span>
+房间号:<span id="room-num"></span>
 
-<input type="text" id="room">
-<button onclick="join()">加入</button>
-
-<div id="content">
-
+<div>
+    <li>
+        uid:1,role:1
+        eyJhbGciOiJIUzI1NiIsImV4cCI6MTUwMzY1MTQ2MywiaWF0IjoxNTAxMDU5NDYzfQ.eyJyb2xlIjoxLCJ1aWQiOjF9.-FQ8RnumCK-2Ni5j92LXGK5ZNX22E7KZRUDo8ied2mY
+    </li>
+    <li>
+        uid:2,role:1
+        eyJhbGciOiJIUzI1NiIsImV4cCI6MTUwMzY1MTgyMywiaWF0IjoxNTAxMDU5ODIzfQ.eyJyb2xlIjoxLCJ1aWQiOjJ9.ioEvrpq48K9dm7vI0XIB7egfF68X7gn_0IJYn0QK6zM
+    </li>
+    <li>
+        uid:3,role:2
+        eyJhbGciOiJIUzI1NiIsImV4cCI6MTUwMzY1MTg0MiwiaWF0IjoxNTAxMDU5ODQyfQ.eyJyb2xlIjoyLCJ1aWQiOjN9.bR7296G-f8D1BOOVvkGCDitixU9Bu6eE3keffPf5tKk
+    </li>
 </div>
 
+<input type="text" id="room" placeholder="room">
+<input type="text" id="token" placeholder="token">
+<button onclick="join()">加入</button>
 <input type="text" id="message">
 <button onclick="newMsg()">发送</button>
+
+<button onclick="userCount()">人数</button>
+<div class="container">
+    <div id="content">
+
+    </div>
+    <div id="user">
+
+    </div>
+</div>
+
+
 <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
 
 <script>
+    var socketio = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
 
     function join() {
         var room = $("#room").val();
+        var token = $("#token").val();
         $("#room-num").text(room);
-        socketio.emit('join', {"room": room})
+        socketio.emit('join', {"room": room, "token": token})
     }
     function newMsg() {
         var msg = $("#message").val();
         socketio.emit('message', {"msg": msg})
     }
 
-    var socketio = io.connect('http://' + document.domain + ':' + location.port + '/chat');
-
-    socketio.on('sid', function (data) {
-        $("#sid").text(data.message)
-    });
 
     socketio.on('status', function (data) {
         $("#content").append("<li>" + data.message + "</li>")
     })
+
+    socketio.on('active_user', function (data) {
+        $("#user").append("<li>" + data.message + "</li>")
+    })
+
+    function userCount() {
+        socketio.emit('user', {})
+    }
 
 </script>
 

@@ -1,7 +1,7 @@
 from flask import Blueprint
+
 from chatroom.ext.socketio_init import socketio
 from chatroom.modules.events import ChatRoom
-
 from chatroom.modules.views import IndexHandler
 
 module = Blueprint("chat", __name__)

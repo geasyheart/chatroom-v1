@@ -1,7 +1,9 @@
 SECRET_KEY = '346b9d3b-51fd-4e03-b0d9-2dc8311cf544'
 
-REDIS_URL = "redis://:@192.168.1.10:6379/0"
+REDIS_URL = "redis://192.168.1.10:6379/0"
 
 MESSAGE_QUEUE = "redis://192.168.1.10:6379/6"
+
+LIMIT_SIZE = 1000
 
 DEBUG = True
